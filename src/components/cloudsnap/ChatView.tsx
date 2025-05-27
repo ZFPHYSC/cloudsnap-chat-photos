@@ -218,13 +218,18 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
       
       case 'action-button':
         return (
-          <div key={message.id} className="flex justify-end mb-4">
-            <Button
-              onClick={handleStartSearching}
-              className="bg-accent-primary hover:bg-blue-600 text-white px-6 py-3 rounded-full font-rubik animate-bubble-enter"
-            >
-              {message.content}
-            </Button>
+          <div key={message.id} className="flex justify-start mb-4">
+            <div className="bg-white p-4 rounded-2xl rounded-tl-md shadow-sm border border-separator max-w-[80%] animate-bubble-enter">
+              <p className="font-rubik text-sm text-gray-700 mb-3">
+                Ready to start searching your photos!
+              </p>
+              <Button
+                onClick={handleStartSearching}
+                className="w-full bg-accent-primary hover:bg-blue-600 text-white px-6 py-3 rounded-full font-rubik"
+              >
+                {message.content}
+              </Button>
+            </div>
           </div>
         );
       
