@@ -1,12 +1,37 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState } from 'react';
+import SplashView from '../components/cloudsnap/SplashView';
+import ChatView from '../components/cloudsnap/ChatView';
+import SearchView from '../components/cloudsnap/SearchView';
+import GalleryView from '../components/cloudsnap/GalleryView';
+
+export type ViewType = 'splash' | 'chat' | 'search' | 'gallery';
 
 const Index = () => {
+  const [currentView, setCurrentView] = useState<ViewType>('splash');
+
+  const handleNavigate = (view: ViewType) => {
+    setCurrentView(view);
+  };
+
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'splash':
+        return <SplashView onNavigate={handleNavigate} />;
+      case 'chat':
+        return <ChatView onNavigate={handleNavigate} />;
+      case 'search':
+        return <SearchView onNavigate={handleNavigate} />;
+      case 'gallery':
+        return <GalleryView onNavigate={handleNavigate} />;
+      default:
+        return <SplashView onNavigate={handleNavigate} />;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-surface-light overflow-hidden">
+      {renderCurrentView()}
     </div>
   );
 };
