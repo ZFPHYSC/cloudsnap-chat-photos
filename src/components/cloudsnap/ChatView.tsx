@@ -14,7 +14,7 @@ interface ChatViewProps {
 
 type Message = {
   id: string;
-  type: 'user' | 'assistant' | 'typing' | 'account-form' | 'thumbnails' | 'progress' | 'action-button';
+  type: 'user' | 'assistant' | 'typing' | 'account-form' | 'account-choice' | 'thumbnails' | 'progress' | 'action-button';
   content: string;
   accountType?: 'create' | 'login';
   total?: number;
@@ -47,7 +47,7 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
-          { id: '3', type: 'account-form', content: 'Create Account', accountType: 'create' }
+          { id: '3', type: 'account-choice', content: 'Account options' }
         ]);
       }, 500);
     }
@@ -63,6 +63,14 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const handleAccountChoice = (type: 'create' | 'login') => {
+    setMessages(prev => [
+      ...prev.filter(m => m.type !== 'account-choice'),
+      { id: 'user-choice', type: 'user', content: type === 'create' ? 'Create Account' : 'Log In' },
+      { id: '4', type: 'account-form', content: 'Account form', accountType: type }
+    ]);
+  };
+
   const handleAccountSubmit = (email: string, password: string) => {
     setMessages(prev => [
       ...prev.filter(m => m.type !== 'account-form'),
@@ -73,22 +81,22 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
     setTimeout(() => {
       setMessages(prev => [
         ...prev.filter(m => m.type !== 'typing'),
-        { id: '4', type: 'assistant', content: '✅ Account created — welcome!' }
+        { id: '5', type: 'assistant', content: '✅ Account created — welcome!' }
       ]);
     }, 1000);
 
     setTimeout(() => {
       setMessages(prev => [
         ...prev,
-        { id: '5', type: 'assistant', content: 'Now let me access your photos to get started.' },
-        { id: '6', type: 'thumbnails', content: 'Photo selection' }
+        { id: '6', type: 'assistant', content: 'Now let me access your photos to get started.' },
+        { id: '7', type: 'thumbnails', content: 'Photo selection' }
       ]);
     }, 2000);
 
     setTimeout(() => {
       setMessages(prev => [
         ...prev,
-        { id: '7', type: 'progress', content: 'Upload progress', total: 12 }
+        { id: '8', type: 'progress', content: 'Upload progress', total: 12 }
       ]);
     }, 4000);
   };
@@ -96,8 +104,8 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
   const handleUploadComplete = () => {
     setMessages(prev => [
       ...prev.filter(m => m.type !== 'progress'),
-      { id: '8', type: 'assistant', content: 'Uploaded 12 photos • saved 27.6 MB. 👍🏼' },
-      { id: '9', type: 'action-button', content: 'Start Searching →' }
+      { id: '9', type: 'assistant', content: 'Uploaded 12 photos • saved 27.6 MB. 👍🏼' },
+      { id: '10', type: 'action-button', content: 'Start Searching →' }
     ]);
   };
 
@@ -109,6 +117,29 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
     switch (message.type) {
       case 'typing':
         return <TypingIndicator key={message.id} />;
+      
+      case 'account-choice':
+        return (
+          <div key={message.id} className="flex justify-start mb-4">
+            <div className="bg-white p-4 rounded-2xl rounded-tl-md shadow-sm border border-separator max-w-[80%] animate-bubble-enter">
+              <div className="flex flex-col gap-3">
+                <Button
+                  onClick={() => handleAccountChoice('create')}
+                  className="bg-accent-primary hover:bg-blue-600 text-white font-rubik"
+                >
+                  Create Account
+                </Button>
+                <Button
+                  onClick={() => handleAccountChoice('login')}
+                  variant="outline"
+                  className="border-accent-primary text-accent-primary hover:bg-accent-primary hover:text-white font-rubik"
+                >
+                  Log In
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
       
       case 'account-form':
         return (
@@ -160,7 +191,7 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
 
   return (
     <div className="min-h-screen bg-surface-light flex flex-col">
-      <div className="flex-1 overflow-y-auto p-4 pb-8">
+      <div className="flex-1 overflow-y-auto p-4 pb-8 pt-16 md:pt-4">
         {messages.map(renderMessage)}
         <div ref={scrollRef} />
       </div>
