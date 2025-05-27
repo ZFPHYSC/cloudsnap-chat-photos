@@ -14,7 +14,7 @@ interface ChatViewProps {
 
 type Message = {
   id: string;
-  type: 'user' | 'assistant' | 'typing' | 'account-form' | 'account-choice' | 'thumbnails' | 'progress' | 'action-button';
+  type: 'user' | 'assistant' | 'typing' | 'account-form' | 'account-choice' | 'permission-request' | 'thumbnails' | 'progress' | 'action-button';
   content: string;
   accountType?: 'create' | 'login';
   total?: number;
@@ -90,24 +90,42 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
     setTimeout(() => {
       setMessages(prev => [
         ...prev,
-        { id: 'assistant-9', type: 'assistant', content: 'Now let me access your photos to get started.' },
-        { id: 'thumbnails-10', type: 'thumbnails', content: 'Photo selection' }
+        { id: 'assistant-9', type: 'assistant', content: 'I need permission to access your photos to get started.' },
+        { id: 'permission-10', type: 'permission-request', content: 'Permission request' }
       ]);
     }, 2000);
+  };
 
-    setTimeout(() => {
+  const handlePermissionResponse = (granted: boolean) => {
+    if (granted) {
       setMessages(prev => [
-        ...prev,
-        { id: 'progress-11', type: 'progress', content: 'Upload progress', total: 12 }
+        ...prev.filter(m => m.type !== 'permission-request'),
+        { id: 'user-permission-11', type: 'user', content: 'Allow Access' },
+        { id: 'assistant-12', type: 'assistant', content: 'Great! Now accessing your photos...' },
+        { id: 'thumbnails-13', type: 'thumbnails', content: 'Photo selection' }
       ]);
-    }, 4000);
+
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          { id: 'progress-14', type: 'progress', content: 'Upload progress', total: 12 }
+        ]);
+      }, 2000);
+    } else {
+      setMessages(prev => [
+        ...prev.filter(m => m.type !== 'permission-request'),
+        { id: 'user-permission-11', type: 'user', content: 'Deny Access' },
+        { id: 'assistant-12', type: 'assistant', content: 'I need photo access to help you search. Please allow access to continue.' },
+        { id: 'permission-13', type: 'permission-request', content: 'Permission request' }
+      ]);
+    }
   };
 
   const handleUploadComplete = () => {
     setMessages(prev => [
       ...prev.filter(m => m.type !== 'progress'),
-      { id: 'assistant-12', type: 'assistant', content: 'Uploaded 12 photos • saved 27.6 MB. 👍🏼' },
-      { id: 'action-13', type: 'action-button', content: 'Start Searching →' }
+      { id: 'assistant-15', type: 'assistant', content: 'Uploaded 12 photos • saved 27.6 MB. 👍🏼' },
+      { id: 'action-16', type: 'action-button', content: 'Start Searching →' }
     ]);
   };
 
@@ -137,6 +155,34 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
                   className="border-accent-primary text-accent-primary hover:bg-accent-primary hover:text-white font-rubik"
                 >
                   Log In
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'permission-request':
+        return (
+          <div key={message.id} className="flex justify-start mb-4">
+            <div className="bg-white p-4 rounded-2xl rounded-tl-md shadow-sm border border-separator max-w-[80%] animate-bubble-enter">
+              <div className="mb-3">
+                <p className="font-rubik text-sm text-gray-700 mb-3">
+                  CloudSnap would like to access your photos to help you search and organize them.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Button
+                  onClick={() => handlePermissionResponse(true)}
+                  className="bg-accent-primary hover:bg-blue-600 text-white font-rubik"
+                >
+                  Allow Access
+                </Button>
+                <Button
+                  onClick={() => handlePermissionResponse(false)}
+                  variant="outline"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 font-rubik"
+                >
+                  Deny Access
                 </Button>
               </div>
             </div>
