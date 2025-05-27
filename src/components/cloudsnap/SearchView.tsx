@@ -111,38 +111,45 @@ const SearchView = ({ onNavigate }: SearchViewProps) => {
 
   return (
     <div className="min-h-screen bg-surface-light flex flex-col">
-      {/* Floating Gallery FAB - moved lower */}
-      <Button
-        onClick={() => onNavigate('gallery')}
-        className="fixed top-16 right-4 w-14 h-14 rounded-full bg-accent-primary hover:bg-blue-600 z-10 shadow-lg"
-      >
-        <Grid className="w-6 h-6" />
-      </Button>
-
       {/* Chat History with proper top padding for iPhone safe area */}
-      <div className="flex-1 overflow-y-auto p-4 pt-20 pb-32">
+      <div className="flex-1 overflow-y-auto p-4 pt-20 pb-40">
         {messages.map(renderMessage)}
         <div ref={scrollRef} />
       </div>
 
-      {/* Floating Input Bar - now properly floating with backdrop blur */}
-      <div className="fixed bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md border border-separator rounded-2xl shadow-lg p-4">
-        <form onSubmit={handleSearch} className="flex gap-2">
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search your photos..."
-            className="flex-1 font-rubik border-separator focus:border-accent-primary min-h-14 bg-white/50"
-            disabled={isSearching}
-          />
-          <Button 
-            type="submit" 
-            disabled={!query.trim() || isSearching}
-            className="px-6 bg-accent-primary hover:bg-blue-600 font-rubik min-h-14"
+      {/* Fixed Bottom Navigation Area */}
+      <div className="fixed bottom-4 left-4 right-4 space-y-3">
+        {/* Gallery Button */}
+        <div className="flex justify-center">
+          <Button
+            onClick={() => onNavigate('gallery')}
+            className="bg-white/90 backdrop-blur-md border border-separator text-gray-700 hover:bg-white shadow-lg px-6 py-3 rounded-2xl font-rubik"
+            variant="outline"
           >
-            Search
+            <Grid className="w-5 h-5 mr-2" />
+            View Gallery
           </Button>
-        </form>
+        </div>
+
+        {/* Search Bar */}
+        <div className="bg-white/90 backdrop-blur-md border border-separator rounded-2xl shadow-lg p-4">
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search your photos..."
+              className="flex-1 font-rubik border-separator focus:border-accent-primary min-h-14 bg-white/50"
+              disabled={isSearching}
+            />
+            <Button 
+              type="submit" 
+              disabled={!query.trim() || isSearching}
+              className="px-6 bg-accent-primary hover:bg-blue-600 font-rubik min-h-14"
+            >
+              Search
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );
