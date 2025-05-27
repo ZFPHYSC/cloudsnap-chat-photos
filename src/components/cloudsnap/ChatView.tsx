@@ -41,6 +41,8 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
           ...prev.filter(m => m.type !== 'typing'),
           { id: 'assistant-2', type: 'assistant', content: "Let's set up your account. Choose an option:" }
         ]);
+        // Move to next step after showing the message
+        setCurrentStep(1);
       }, 1000);
     },
     () => {
