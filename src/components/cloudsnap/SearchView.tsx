@@ -119,8 +119,8 @@ const SearchView = ({ onNavigate }: SearchViewProps) => {
         <Grid className="w-6 h-6" />
       </Button>
 
-      {/* Chat History */}
-      <div className="flex-1 overflow-y-auto p-4 pb-24">
+      {/* Chat History with proper top padding for iPhone safe area */}
+      <div className="flex-1 overflow-y-auto p-4 pt-20 pb-24">
         {messages.map(renderMessage)}
         <div ref={scrollRef} />
       </div>
