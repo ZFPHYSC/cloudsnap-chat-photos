@@ -22,7 +22,7 @@ type Message = {
 
 const ChatView = ({ onNavigate }: ChatViewProps) => {
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', type: 'user', content: 'Get Started' }
+    { id: 'initial-1', type: 'user', content: 'Get Started' }
   ]);
   const [currentStep, setCurrentStep] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
       setTimeout(() => {
         setMessages(prev => [
           ...prev.filter(m => m.type !== 'typing'),
-          { id: '2', type: 'assistant', content: "Let's set up your account. Choose an option:" }
+          { id: 'assistant-2', type: 'assistant', content: "Let's set up your account. Choose an option:" }
         ]);
       }, 1000);
     },
@@ -47,7 +47,7 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
       setTimeout(() => {
         setMessages(prev => [
           ...prev,
-          { id: '3', type: 'account-choice', content: 'Account options' }
+          { id: 'choice-3', type: 'account-choice', content: 'Account options' }
         ]);
       }, 500);
     }
@@ -66,37 +66,37 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
   const handleAccountChoice = (type: 'create' | 'login') => {
     setMessages(prev => [
       ...prev.filter(m => m.type !== 'account-choice'),
-      { id: 'user-choice', type: 'user', content: type === 'create' ? 'Create Account' : 'Log In' },
-      { id: '4', type: 'account-form', content: 'Account form', accountType: type }
+      { id: 'user-choice-4', type: 'user', content: type === 'create' ? 'Create Account' : 'Log In' },
+      { id: 'form-5', type: 'account-form', content: 'Account form', accountType: type }
     ]);
   };
 
   const handleAccountSubmit = (email: string, password: string) => {
     setMessages(prev => [
       ...prev.filter(m => m.type !== 'account-form'),
-      { id: 'user-form', type: 'user', content: `Account created with ${email}` },
-      { id: 'typing-2', type: 'typing', content: '' }
+      { id: 'user-form-6', type: 'user', content: `Account created with ${email}` },
+      { id: 'typing-7', type: 'typing', content: '' }
     ]);
 
     setTimeout(() => {
       setMessages(prev => [
         ...prev.filter(m => m.type !== 'typing'),
-        { id: '5', type: 'assistant', content: '✅ Account created — welcome!' }
+        { id: 'assistant-8', type: 'assistant', content: '✅ Account created — welcome!' }
       ]);
     }, 1000);
 
     setTimeout(() => {
       setMessages(prev => [
         ...prev,
-        { id: '6', type: 'assistant', content: 'Now let me access your photos to get started.' },
-        { id: '7', type: 'thumbnails', content: 'Photo selection' }
+        { id: 'assistant-9', type: 'assistant', content: 'Now let me access your photos to get started.' },
+        { id: 'thumbnails-10', type: 'thumbnails', content: 'Photo selection' }
       ]);
     }, 2000);
 
     setTimeout(() => {
       setMessages(prev => [
         ...prev,
-        { id: '8', type: 'progress', content: 'Upload progress', total: 12 }
+        { id: 'progress-11', type: 'progress', content: 'Upload progress', total: 12 }
       ]);
     }, 4000);
   };
@@ -104,8 +104,8 @@ const ChatView = ({ onNavigate }: ChatViewProps) => {
   const handleUploadComplete = () => {
     setMessages(prev => [
       ...prev.filter(m => m.type !== 'progress'),
-      { id: '9', type: 'assistant', content: 'Uploaded 12 photos • saved 27.6 MB. 👍🏼' },
-      { id: '10', type: 'action-button', content: 'Start Searching →' }
+      { id: 'assistant-12', type: 'assistant', content: 'Uploaded 12 photos • saved 27.6 MB. 👍🏼' },
+      { id: 'action-13', type: 'action-button', content: 'Start Searching →' }
     ]);
   };
 
