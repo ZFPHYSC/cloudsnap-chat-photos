@@ -16,8 +16,8 @@ const GalleryView = ({ onNavigate }: GalleryViewProps) => {
 
   return (
     <div className="min-h-screen bg-surface-light">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-separator bg-white/80 backdrop-blur-md">
+      {/* Header with iPhone safe area padding */}
+      <div className="flex items-center justify-between p-4 pt-16 border-b border-separator bg-white/80 backdrop-blur-md">
         <h1 className="text-xl font-semibold font-rubik">Gallery</h1>
         <Button
           onClick={() => onNavigate('search')}
