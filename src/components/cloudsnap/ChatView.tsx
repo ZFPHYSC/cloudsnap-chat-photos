@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import ChatBubble from './ChatBubble';
 import TypingIndicator from './TypingIndicator';
 import AccountFormBubble from './AccountFormBubble';
-import ThumbnailGridBubble from './ThumbnailGridBubble';
+import PhotoUploadBubble from './PhotoUploadBubble';
 import ProgressBubble from './ProgressBubble';
 import { ViewType } from '../../pages/Index';
 import { Button } from '../ui/button';
