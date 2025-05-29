@@ -1,73 +1,140 @@
-# Welcome to your Lovable project
+# CloudSnap - Real Photo Upload Setup
 
-## Project info
+This setup enables CloudSnap to run on your Mac's IP address (192.168.0.17) and handle real photo uploads from your phone.
 
-**URL**: https://lovable.dev/projects/988e4488-ed65-4432-a137-9496f1a520a1
+## Quick Setup
 
-## How can I edit this code?
+1. **Make the setup script executable and run it:**
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh
+   ```
 
-There are several ways of editing your application.
+2. **Start the backend server:**
+   ```bash
+   cd server
+   npm start
+   ```
 
-**Use Lovable**
+3. **In a new terminal, start the frontend:**
+   ```bash
+   npm run dev
+   ```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/988e4488-ed65-4432-a137-9496f1a520a1) and start prompting.
+4. **Access from your phone:**
+   - Open: `http://192.168.0.17:8080`
 
-Changes made via Lovable will be committed automatically to this repo.
+## Manual Setup (if script doesn't work)
 
-**Use your preferred IDE**
+### Backend Server Setup
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Create server directory:**
+   ```bash
+   mkdir server && cd server
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. **Initialize and install dependencies:**
+   ```bash
+   npm init -y
+   npm install express multer cors
+   npm install --save-dev nodemon
+   ```
 
-Follow these steps:
+3. **Create `server.js`** (use the server code from the artifacts above)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+4. **Start the server:**
+   ```bash
+   npm start
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Frontend Setup
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+2. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+## How It Works
+
+### Real Photo Upload Flow
+
+1. **Permission Request**: The app asks for photo access
+2. **Photo Selection**: Click "Select Photos" to choose from your device
+3. **Preview**: See thumbnails of selected photos with total size
+4. **Upload**: Click "Upload" to send photos to the server
+5. **Progress**: Real progress bar based on actual upload
+6. **Completion**: Shows actual number of photos and MB uploaded
+
+### File Storage
+
+- Photos are uploaded to `server/uploads/` directory
+- Each photo gets a unique filename to prevent conflicts
+- Original filenames are preserved in the database response
+
+### Gallery & Search
+
+- **Gallery**: Shows real uploaded photos in a masonry layout
+- **Search**: Returns random selection of your uploaded photos
+- **No Photos State**: Prompts user to upload photos if none exist
+
+## API Endpoints
+
+- `POST /api/upload` - Upload photos
+- `GET /api/photos` - Get all uploaded photos
+- `GET /api/health` - Health check
+- `GET /uploads/:filename` - Serve uploaded images
+
+## Network Configuration
+
+The app is configured to run on your specific IP:
+- **Frontend**: `http://192.168.0.17:8080`
+- **Backend**: `http://192.168.0.17:8081`
+
+## File Structure
+
+```
+cloudsnap-chat-photos/
+├── server/
+│   ├── uploads/          # Uploaded photos
+│   ├── server.js         # Express server
+│   └── package.json      # Server dependencies
+├── src/
+│   ├── components/
+│   │   └── cloudsnap/
+│   │       ├── PhotoUploadBubble.tsx  # Real file upload
+│   │       ├── GalleryView.tsx        # Real photo gallery
+│   │       └── SearchView.tsx         # Real photo search
+│   └── ...
+└── package.json          # Frontend dependencies
 ```
 
-**Edit a file directly in GitHub**
+## Features Added
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+✅ **Real Photo Selection**: Native file input for selecting photos  
+✅ **Actual Upload**: Photos uploaded to server with progress tracking  
+✅ **File Validation**: Only image files accepted  
+✅ **Size Calculation**: Real file sizes displayed and uploaded  
+✅ **Photo Storage**: Files saved to server/uploads directory  
+✅ **Gallery Integration**: Gallery shows actual uploaded photos  
+✅ **Search Integration**: Search results use real photos  
+✅ **Network Access**: Accessible from phone via IP address  
 
-**Use GitHub Codespaces**
+## Testing on Phone
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Ensure both devices are on the same WiFi network**
+2. **Make sure Mac firewall allows connections on ports 8080 and 8081**
+3. **Access `http://192.168.0.17:8080` from your phone's browser**
+4. **Select photos using your phone's native photo picker**
+5. **Upload and see them appear in the gallery**
 
-## What technologies are used for this project?
+## Troubleshooting
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/988e4488-ed65-4432-a137-9496f1a520a1) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- **Cannot access from phone**: Check firewall settings and WiFi network
+- **Upload fails**: Ensure server is running on port 8081
+- **Photos don't appear**: Check `server/uploads` directory permissions
+- **CORS errors**: Server includes CORS headers, restart if needed
