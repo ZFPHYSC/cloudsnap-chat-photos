@@ -97,3 +97,5 @@ const GalleryView = ({ onNavigate }: GalleryViewProps) => {
     </div>
   );
 };
+
+export default GalleryView;
