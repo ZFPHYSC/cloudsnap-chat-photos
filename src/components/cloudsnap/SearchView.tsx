@@ -99,3 +99,86 @@ const SearchView = ({ onNavigate }: SearchViewProps) => {
 
     setQuery('');
   };
+
+  const renderMessage = (message: Message) => {
+    if (message.type === 'typing') {
+      return <TypingIndicator key={message.id} />;
+    }
+    
+    if (message.type === 'results') {
+      return (
+        <div key={message.id} className="mb-6">
+          <div className="flex justify-start mb-4">
+            <div className="bg-white px-4 py-2 rounded-2xl rounded-tl-md shadow-sm border border-separator">
+              <span className="text-sm font-rubik text-gray-700">Found {message.results?.length} photos:</span>
+            </div>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {message.results?.map((result, index) => (
+              <ResultCard
+                key={index}
+                image={result.image}
+                caption={result.caption}
+                index={index}
+                isRealImage={result.path !== undefined}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <ChatBubble key={message.id} type={message.type as 'user' | 'assistant'}>
+        {message.content}
+      </ChatBubble>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-surface-light flex flex-col">
+      {/* Chat History with proper top padding for iPhone safe area */}
+      <div className="flex-1 overflow-y-auto p-4 pt-20 pb-40">
+        {messages.map(renderMessage)}
+        <div ref={scrollRef} />
+      </div>
+
+      {/* Fixed Bottom Navigation Area */}
+      <div className="fixed bottom-4 left-4 right-4 space-y-3">
+        {/* Gallery Button */}
+        <div className="flex justify-center">
+          <Button
+            onClick={() => onNavigate('gallery')}
+            className="bg-white/90 backdrop-blur-md border border-separator text-gray-700 hover:bg-white shadow-lg px-6 py-3 rounded-2xl font-rubik"
+            variant="outline"
+          >
+            <Grid className="w-5 h-5 mr-2" />
+            View Gallery
+          </Button>
+        </div>
+
+        {/* Search Bar */}
+        <div className="bg-white/90 backdrop-blur-md border border-separator rounded-2xl shadow-lg p-4">
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search your photos..."
+              className="flex-1 font-rubik border-separator focus:border-accent-primary min-h-14 bg-white/50"
+              disabled={isSearching}
+            />
+            <Button 
+              type="submit" 
+              disabled={!query.trim() || isSearching}
+              className="px-6 bg-accent-primary hover:bg-blue-600 font-rubik min-h-14"
+            >
+              Search
+            </Button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SearchView;
